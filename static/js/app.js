@@ -1,5 +1,12 @@
-// Colombo Suburban Land Valuation System - Client Logic
-// Supports both FastAPI REST backend (localhost:8000) and Static Deployment (GitHub Pages)
+// Live Deployed Backend API Endpoint
+const LIVE_BACKEND_URL = "https://auctions-chairman-dude-july.trycloudflare.com";
+
+function getApiUrl(endpoint) {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return endpoint;
+    }
+    return `${LIVE_BACKEND_URL}${endpoint}`;
+}
 
 const BENCHMARK_FALLBACK_DATA = [
     { "model_name": "CatBoost", "category": "Advanced Ensemble", "cv_r2_mean": 0.9532, "cv_r2_std": 0.0038, "test_r2": 0.9676, "test_rmse": 1.641, "test_mae": 1.202, "test_mape": 5.33 },
@@ -138,8 +145,8 @@ async function calculateValuation() {
     let data = null;
 
     try {
-        // Try FastAPI backend first
-        const response = await fetch('/api/predict', {
+        // Try FastAPI backend (local or public deployed tunnel)
+        const response = await fetch(getApiUrl('/api/predict'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -236,7 +243,7 @@ function populateBenchmarkTable(results) {
 
 async function loadBenchmarks() {
     try {
-        const response = await fetch('/api/benchmark');
+        const response = await fetch(getApiUrl('/api/benchmark'));
         if (response.ok) {
             const results = await response.json();
             populateBenchmarkTable(results);
