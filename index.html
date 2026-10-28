@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colombo Suburban Land Valuation System | Malabe–Kottawa Corridor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-area">
+                <div class="logo-badge">VAL</div>
+                <div>
+                    <h1 class="logo-title">Colombo Suburban Land Valuation System</h1>
+                    <p class="logo-subtitle">Advanced Ensemble Architecture (CatBoost, XGBoost, Stacking) & Game-Theoretic TreeSHAP Interpretability</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <span class="badge-tag live-badge">● Live MLOps Engine</span>
+                <span class="badge-tag corridor-badge">Malabe–Kottawa Corridor</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <div class="nav-container">
+            <button class="tab-btn active" id="tab-valuation-btn" onclick="switchTab('valuation')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                Instant Property Valuation & SHAP Interpretability
+            </button>
+            <button class="tab-btn" id="tab-benchmarks-btn" onclick="switchTab('benchmarks')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                10-Model Benchmark & Ensembles vs Baselines
+            </button>
+            <button class="tab-btn" id="tab-shap-btn" onclick="switchTab('shap')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                Global SHAP Interpretability & Research Insights
+            </button>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <!-- TAB 1: VALUATION & REAL-TIME SHAP -->
+        <section id="tab-valuation" class="tab-content active">
+            <div class="grid-2col">
+                <!-- Input Panel -->
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h2>Property Specification (Colombo District)</h2>
+                        <p class="section-desc">Configure Western Province suburban land attributes to evaluate per-perch market rate and compute local Shapley feature attributions.</p>
+                    </div>
+
+                    <form id="valuation-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="locality">Locality / Suburb</label>
+                                <select id="locality" name="locality" required>
+                                    <option value="Malabe" selected>Malabe (IT Hub / SLIIT Corridor)</option>
+                                    <option value="Kottawa">Kottawa (Makumbura / Interchange)</option>
+                                    <option value="Thalawathugoda">Thalawathugoda (Prime Residential)</option>
+                                    <option value="Athurugiriya">Athurugiriya (Expressway Interchange)</option>
+                                    <option value="Kaduwela">Kaduwela (Low-Level / Interchange)</option>
+                                    <option value="Maharagama">Maharagama (Commercial Centre)</option>
+                                    <option value="Battaramulla">Battaramulla (Administrative Capital)</option>
+                                    <option value="Pannipitiya">Pannipitiya (High-Level Corridor)</option>
+                                    <option value="Homagama">Homagama (Tech City / NSBM Hub)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="perch_size">Plot Extent (Perches): <span id="perch-val" class="highlight-val">10.0</span></label>
+                                <input type="range" id="perch_size" name="perch_size" min="6.0" max="40.0" step="0.5" value="10.0" oninput="document.getElementById('perch-val').innerText = this.value">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dist_expressway_interchange_km">Dist. to Expressway Interchange: <span id="exp-val" class="highlight-val">2.5 km</span></label>
+                                <input type="range" id="dist_expressway_interchange_km" name="dist_expressway_interchange_km" min="0.5" max="10.0" step="0.1" value="2.5" oninput="document.getElementById('exp-val').innerText = this.value + ' km'">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dist_nearest_university_km">Dist. to University / IT Park: <span id="uni-val" class="highlight-val">1.2 km</span></label>
+                                <input type="range" id="dist_nearest_university_km" name="dist_nearest_university_km" min="0.3" max="12.0" step="0.1" value="1.2" oninput="document.getElementById('uni-val').innerText = this.value + ' km'">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dist_main_bus_route_m">Walking Dist. to Main Bus Route: <span id="bus-val" class="highlight-val">200 m</span></label>
+                                <input type="range" id="dist_main_bus_route_m" name="dist_main_bus_route_m" min="20" max="1500" step="20" value="200" oninput="document.getElementById('bus-val').innerText = this.value + ' m'">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="road_width_ft">Access Road Width (UDA Standard)</label>
+                                <select id="road_width_ft" name="road_width_ft">
+                                    <option value="10">10 ft (Narrow Lane / Subdividable Restriction)</option>
+                                    <option value="12">12 ft (Standard Residential Lane)</option>
+                                    <option value="15">15 ft (Wide Residential Road)</option>
+                                    <option value="20" selected>20 ft (UDA Commercial Standard Access)</option>
+                                    <option value="30">30 ft (Main Suburban Thoroughfare)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="zoning_type">Zoning Classification</label>
+                                <select id="zoning_type" name="zoning_type">
+                                    <option value="Residential_High">Residential High-Density</option>
+                                    <option value="Residential_Medium" selected>Residential Medium-Density</option>
+                                    <option value="Commercial_Mixed">Commercial / Mixed Development</option>
+                                    <option value="Agricultural_Green">Agricultural / Green Buffer</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="deed_type">Deed & Legal Title Status</label>
+                                <select id="deed_type" name="deed_type">
+                                    <option value="Bim_Saviya_First_Class" selected>Bim Saviya 1st Class (Torrens Title)</option>
+                                    <option value="Clear_Sinnakkara_Title">Clear Sinnakkara (Freehold Deed)</option>
+                                    <option value="Bim_Saviya_Second_Class">Bim Saviya 2nd Class</option>
+                                    <option value="Local_Authority_Permit">Local Authority Permit</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="road_type">Road Surface</label>
+                                <select id="road_type" name="road_type">
+                                    <option value="Carpeted" selected>Carpeted Asphalt</option>
+                                    <option value="Tarred">Tarred Surface</option>
+                                    <option value="Concrete">Concrete Paved</option>
+                                    <option value="Gravel">Gravel / Unpaved</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="topography">Topography & Land Terrain</label>
+                                <select id="topography" name="topography">
+                                    <option value="Flat_Elevated" selected>Flat Elevated (Ideal)</option>
+                                    <option value="Gentle_Slope">Gentle Slope</option>
+                                    <option value="Low_Lying_Filled">Low Lying (Filled / Reclaimed)</option>
+                                    <option value="Paddy_Adjacent">Paddy Border / Marsh Adjacent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="flood_risk_level">Monsoon Flood Hazard Index</label>
+                                <select id="flood_risk_level" name="flood_risk_level">
+                                    <option value="None" selected>None (Elevated Highland)</option>
+                                    <option value="Low">Low Risk</option>
+                                    <option value="Moderate">Moderate (Kelani Basin / Canal Overflow)</option>
+                                    <option value="High">High Inundation Risk</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="shape_regularity">Plot Geometry</label>
+                                <select id="shape_regularity" name="shape_regularity">
+                                    <option value="Rectangular" selected>Rectangular (Standard)</option>
+                                    <option value="Square">Square</option>
+                                    <option value="Irregular">Irregular Boundary</option>
+                                    <option value="Narrow_L_Shape">Narrow L-Shape Bottleneck</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row checkboxes-row">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="pipe_water_available" name="pipe_water_available" checked>
+                                <span>Pipe-borne Water (NWSDB)</span>
+                            </label>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="three_phase_electricity" name="three_phase_electricity" checked>
+                                <span>3-Phase Electricity Available</span>
+                            </label>
+                        </div>
+
+                        <button type="button" id="btn-calculate" class="btn btn-primary" onclick="calculateValuation()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                            Execute Ensemble Valuation & SHAP Attribution
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="results-column">
+                    <!-- Valuation Summary Card -->
+                    <div class="card result-card" id="valuation-result-box">
+                        <div class="result-badge">Ensemble Appraisal Output</div>
+                        <div class="valuation-primary">
+                            <div class="stat-box">
+                                <span class="stat-label">Estimated Perch Value</span>
+                                <div class="stat-value"><span id="res-perch-price">24.50</span> <span class="unit">Lakhs LKR</span></div>
+                                <span class="stat-sub">per perch (approx. LKR <span id="res-perch-rupees">2,450,000</span>)</span>
+                            </div>
+
+                            <div class="stat-box accent-box">
+                                <span class="stat-label">Total Land Valuation</span>
+                                <div class="stat-value"><span id="res-total-millions">24.50</span> <span class="unit">Million LKR</span></div>
+                                <span class="stat-sub">Plot Extent: <span id="res-extent-summary">10.0</span> Perches</span>
+                            </div>
+                        </div>
+
+                        <div class="model-used-banner">
+                            <span>Predicted by Model: <strong id="res-model-name">CatBoost Regressor (Best Model)</strong></span>
+                            <span class="benchmark-pill">Hold-out $R^2$: 0.992</span>
+                        </div>
+                    </div>
+
+                    <!-- Local SHAP Attribution Breakdown Card -->
+                    <div class="card shap-card">
+                        <div class="card-header">
+                            <h3>Local SHAP Explainability Breakdown</h3>
+                            <p class="section-desc">Game-theoretic Shapley contributions: factors driving the valuation above or below baseline average (<span id="res-base-value">21.50</span> Lakhs).</p>
+                        </div>
+
+                        <div id="shap-breakdown-list" class="shap-list">
+                            <!-- Populated dynamically via JS -->
+                            <div class="shap-item positive">
+                                <div class="shap-info">
+                                    <span class="shap-feat">Locality: Malabe IT Corridor</span>
+                                    <span class="shap-contrib">+3.20 Lakhs</span>
+                                </div>
+                                <div class="shap-bar-bg"><div class="shap-bar-fill pos" style="width: 75%"></div></div>
+                            </div>
+                            <div class="shap-item positive">
+                                <div class="shap-info">
+                                    <span class="shap-feat">Expressway Interchange Proximity (< 2.5km)</span>
+                                    <span class="shap-contrib">+2.10 Lakhs</span>
+                                </div>
+                                <div class="shap-bar-bg"><div class="shap-bar-fill pos" style="width: 55%"></div></div>
+                            </div>
+                        </div>
+
+                        <div class="shap-footer">
+                            <span class="footnote">Mathematical formulation: $f(x) = \phi_0 + \sum_{i=1}^M \phi_i(x)$ computed via TreeSHAP.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: MODEL BENCHMARKING (10 MODELS) -->
+        <section id="tab-benchmarks" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Rigorous Model Benchmarking: 10 Architectures Compared</h2>
+                    <p class="section-desc">Empirical comparison of Classical Baselines vs. Advanced Ensemble Learners across 5-Fold Cross-Validation and a 20% hold-out test set.</p>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="benchmark-table" id="benchmark-table-body">
+                        <thead>
+                            <tr>
+                                <th>Architecture Category</th>
+                                <th>Algorithm / Model</th>
+                                <th>5-Fold CV $R^2$</th>
+                                <th>Test $R^2$</th>
+                                <th>Test RMSE (Lakhs)</th>
+                                <th>Test MAE (Lakhs)</th>
+                                <th>MAPE (%)</th>
+                                <th>Performance Tier</th>
+                            </tr>
+                        </thead>
+                        <tbody id="benchmark-rows">
+                            <!-- Populated dynamically or static fallback -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="chart-embed">
+                    <h3>Benchmark Comparative Visualization</h3>
+                    <img src="static/plots/model_comparison_benchmark.png" alt="Model Comparison Benchmark Chart" class="responsive-chart">
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: SHAP GLOBAL EXPLAINABILITY & EDA -->
+        <section id="tab-shap" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Game-Theoretic SHAP Analysis & Global Interpretability</h2>
+                    <p class="section-desc">TreeSHAP (Lundberg et al., Nature MI 2020) reveals non-linear interactions and critical threshold effects governing suburban Colombo land values.</p>
+                </div>
+
+                <div class="grid-2col">
+                    <div class="chart-box">
+                        <h3>1. SHAP Global Feature Impact (Beeswarm Summary)</h3>
+                        <p class="chart-desc">Shows the distribution of Shapley impacts across all samples. High values of expressway proximity, road width, and prime localities push values upward.</p>
+                        <img src="static/plots/shap_summary_beeswarm.png" alt="SHAP Beeswarm" class="responsive-chart">
+                    </div>
+
+                    <div class="chart-box">
+                        <h3>2. Mean |SHAP| Global Feature Importance</h3>
+                        <p class="chart-desc">Quantifies the average marginal contribution of each physical, regulatory, and geographical feature.</p>
+                        <img src="static/plots/shap_bar_importance.png" alt="SHAP Bar Importance" class="responsive-chart">
+                    </div>
+                </div>
+
+                <div class="grid-2col" style="margin-top: 2rem;">
+                    <div class="chart-box">
+                        <h3>3. Expressway Accessibility Non-linear Decay</h3>
+                        <p class="chart-desc">Demonstrates how distance to Kottawa, Athurugiriya, or Kaduwela interchanges confers steep non-linear price appreciation within 2 km.</p>
+                        <img src="static/plots/shap_dependence_expressway.png" alt="Expressway Dependence" class="responsive-chart">
+                    </div>
+
+                    <div class="chart-box">
+                        <h3>4. Access Road Width & UDA 20ft Regulation Step</h3>
+                        <p class="chart-desc">Notice the dramatic step-change in valuation at 20 feet, where Sri Lankan UDA commercial and subdivision permits become legally viable.</p>
+                        <img src="static/plots/shap_dependence_road_width.png" alt="Road Width Dependence" class="responsive-chart">
+                    </div>
+                </div>
+
+                <div class="chart-box" style="margin-top: 2rem;">
+                    <h3>5. Exploratory Data Distributions & Suburb Boxplots</h3>
+                    <img src="static/plots/eda_distributions.png" alt="EDA Distributions" class="responsive-chart">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>MSc in Artificial Intelligence | University of Moratuwa | Machine Learning Assignment</p>
+        <p class="copyright">Developed by Thihan D.P.D. (Index: 269204J) • Malabe–Kottawa Corridor Valuation System</p>
+    </footer>
+
+    <script src="static/js/app.js"></script>
+</body>
+</html>
