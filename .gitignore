@@ -29,3 +29,5 @@ catboost_info/
 video/.*_original*
 Colombo_Land_Valuation_AI_MSc_Submission.zip
 
+*.zip
+video/
