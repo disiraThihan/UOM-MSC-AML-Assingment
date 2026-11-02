@@ -24,3 +24,8 @@ catboost_info/
 .vscode/
 *.swp
 *.swo
+
+# Large raw video backup
+video/.*_original*
+Colombo_Land_Valuation_AI_MSc_Submission.zip
+
